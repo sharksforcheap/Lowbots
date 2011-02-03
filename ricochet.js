@@ -1,3 +1,4 @@
+//this is tony's comment to upload to git
 //initializing the current robot
 var current_robot = 0;
 // determine size of board
