@@ -1,8 +1,3 @@
-//third change.
-// tony pro test
-// hi tony
-// another change
-
 //initializing the current robot
 var current_robot = 0;
 // determine size of board
@@ -68,6 +63,7 @@ for (var row = 6; row < 10; row++){
   }
 }
 
+
 /**************make targets**************/
 //random number generator
 var random_below = function (maximum) {
@@ -97,27 +93,40 @@ var placeQuadrantTargets = function(verticalSide, horizontalSide){
 		    board[whichHNeighbor][whichVNeighbor].no_target = true;
 		  }
 		}
-		//putting the targets in the array
-		targets.push(board[dest_row][dest_col]);
-		//adding walls to the new target
-		if (random_below(2)){
-			board[dest_row][dest_col].e_border = true;
-			board[dest_row][dest_col+1].w_border = true;
-		} else {
-			board[dest_row][dest_col].w_border = true;
-			board[dest_row][dest_col-1].e_border = true;
-
+		for (which_peer = 0; which_peer < 8; which_peer++){
+		  if (verticalOffset + which_peer !== dest_row){
+		    board[verticalOffset + which_peer][dest_col].no_target = true;
+		  }
+  		  if (horizontalOffset + which_peer !== dest_col){
+		    board[dest_row][horizontalOffset + which_peer].no_target = true;
+		  }
 		}
-		if (random_below(2)){
-			board[dest_row][dest_col].n_border = true;
+		//putting the target in the array
+		targets.push(board[dest_row][dest_col]);
+		
+		//adding walls to the new target
+		if (which === 0) {
+		    board[dest_row][dest_col].e_border = true;
+			board[dest_row][dest_col+1].w_border = true;
+		    board[dest_row][dest_col].n_border = true;
 			board[dest_row-1][dest_col].s_border = true;
-		} else {
+		} else if (which === 1) {
+		    board[dest_row][dest_col].e_border = true;
+			board[dest_row][dest_col+1].w_border = true;
 			board[dest_row][dest_col].s_border = true;
 			board[dest_row+1][dest_col].n_border = true;
-
+		} else if (which === 2) {
+			board[dest_row][dest_col].w_border = true;
+			board[dest_row][dest_col-1].e_border = true;
+			board[dest_row][dest_col].n_border = true;
+			board[dest_row-1][dest_col].s_border = true;
+		} else if (which === 3) {
+			board[dest_row][dest_col].w_border = true;
+			board[dest_row][dest_col-1].e_border = true;
+			board[dest_row][dest_col].s_border = true;
+			board[dest_row+1][dest_col].n_border = true;
 		}
 		//adding walls to adjacent cells
-	 	
 	}
 };
 
@@ -126,6 +135,13 @@ placeQuadrantTargets(false, false);
 placeQuadrantTargets(false, true);
 placeQuadrantTargets(true, false);
 placeQuadrantTargets(true, true);
+
+//choosing one target to be the active target
+var active_target = {};
+var target_number = random_below(15);
+active_target.row = targets[target_number].row;
+active_target.col = targets[target_number].col;
+board[active_target.row][active_target.col].active_target = true;
 
 
 
@@ -151,37 +167,63 @@ place_quadrant_bucket_walls(true, true);
 /**************make the robots and place them randomly**************/
 
 //make blue robot and say where it is
-
 var robot_number = 4;
 var robot_list = [];
-
 var robot_color_mapping = {
   0: 'red',
   1: 'green',
   2: 'blue',
   3: 'yellow'
 };
+var color_robot_mapping = {
+  'red': 0,
+  'green': 1,
+  'blue': 2,
+  'yellow': 3
+};
 
 for (var which = 0; which < robot_number; which++) {
 	do {
 	  var robot_row = random_below(16);
 	  var robot_col = random_below(16);
-	} while (board[robot_row][robot_col].is_target === true || typeof board[robot_row][robot_col].robot === 'number')
+	} while (board[robot_row][robot_col].is_target || 
+	  typeof board[robot_row][robot_col].robot === 'number' || 
+	  (
+	    (board[robot_row][robot_col].row === 7 || board[robot_row][robot_col].row === 8) &&
+	    (board[robot_row][robot_col].col === 7 || board[robot_row][robot_col].col === 8) 
+	  )   
+	)
     board[robot_row][robot_col].robot = which;
 	robot_list.push({
 		row: robot_row,
-		col: robot_col
+		col: robot_col,
+		home_row: robot_row,
+		home_col: robot_col
 	});
 }
 
-/**************selecting robots**************/
+//setting original robot locations
 
+/**************selecting robots and resetting**************/
 
+var select_robot = function (number) {
+  current_robot = number;
+};
+
+var reset = function () {
+  for (var which_robot = 0; which_robot < 4; which_robot++) {
+    delete board[robot_list[which_robot].row][robot_list[which_robot].col].robot;
+    robot_list[which_robot].row = robot_list[which_robot].home_row;
+    robot_list[which_robot].col = robot_list[which_robot].home_col;
+    board[robot_list[which_robot].row][robot_list[which_robot].col].robot = which_robot;
+  }
+board.move_count = 0;
+};
 
 /**************move robots**************/
 
 //define location
-
+board.move_count = 0;
 var move = {
   north: function () { return move.somewhere('row', -1, 'n_border'); },
   south: function () { return move.somewhere('row',  1, 's_border'); },
@@ -195,7 +237,13 @@ var move = {
     };
     while(!board[location.row][location.col][wallProperty]){
       location[axis] = location[axis] + change;
+      if (typeof board[location.row][location.col].robot === "number"){
+        location[axis] = location[axis] - change;
+        break;
+      }
     }
+    //adding to the counter
+    board.move_count++;
     //update its old indicator
     board[robot_list[current_robot].row][robot_list[current_robot].col].robot = null;
     //update the robot's location
@@ -203,11 +251,10 @@ var move = {
     robot_list[current_robot].col = location.col;
     //update its new indicator
     board[robot_list[current_robot].row][robot_list[current_robot].col].robot = current_robot;
+    if (robot_list[1].row === active_target.row && robot_list[1].col === active_target.col) {
+      board.victorious = true;
+    }
+
   }
 };
 
-
-move.east();
-move.south();
-move.west();
-move.north();

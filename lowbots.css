@@ -8,22 +8,25 @@
         clear: both;
       }
       .n_border {
-        border-top: 1px solid red;
+        border-top: 1px solid black;
       }
       .s_border {
-        border-bottom: 1px solid red;
+        border-bottom: 1px solid black;
       }
       .e_border {
-        border-right: 1px solid red;
+        border-right: 1px solid black;
       }
       .w_border {
-        border-left: 1px solid red;
+        border-left: 1px solid black;
       }
       .is_target {
-        background-color: tan;
+        background-color: #DDDDDD;
       }
       .no_target {
-        background-color: #DDDDDD;
+        /*background-color: #DDDDDD;*/
+      }
+      .active_target {
+        background-color: #00FF00;
       }
       .red, .green, .blue, .yellow {
         background-position: 178px -215px;
