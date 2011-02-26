@@ -8,7 +8,7 @@
     <script src="./lowbots.js"></script>
     <script src="./ricochet.js"></script>
   </head>
-  <body react="within board">
+  <body>
     <div>Lowbots!!</div>
     <div react="showIf victorious">You win!!</div>
     <div react="contain move_count"></div>
@@ -32,7 +32,7 @@
 
     <script>
       var drawBoard = function(board){
-        react.update($('body')[0], {board:board});
+        react.update($('body')[0]);
       };
 
       $(document).keyup(function(event){
@@ -45,7 +45,6 @@
         var direction = directionTranslationMatrix[event.keyCode];
         if(direction){
           move[direction]();
-          drawBoard(board);
         }
         var robotTranslationMatrix = {
           82: 'red',
@@ -56,13 +55,13 @@
         var robot = robotTranslationMatrix[event.keyCode];
         if(robot){
           select_robot(color_robot_mapping[robot]);
-          drawBoard(board);
         }
-        if(event.keyCode === 27){
+        if(event.keyCode === 27 /*escape*/){
           reset();
           drawBoard(board);
         }
       });
+      react.anchor($('body')[0], board);
       drawBoard(board);
     </script>
 

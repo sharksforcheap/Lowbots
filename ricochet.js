@@ -13,11 +13,11 @@ for (var row = 0; row < size; row++){
   for (var col = 0; col < size; col++){
     //put an object at every cell
     board[row][col] = {
-		robot_color: function(){
-			return robot_color_mapping[this.robot];
-		},
-    	row: row,
-    	col: col
+      robot_color: function(){
+        return robot_color_mapping[this.robot];
+      },
+      row: row,
+      col: col
     };
   }
 }
@@ -245,15 +245,21 @@ var move = {
     }
     //adding to the counter
     board.move_count++;
+    react.changed(board, 'move_count');
     //update its old indicator
-    board[robot_list[current_robot].row][robot_list[current_robot].col].robot = null;
+    var squareToLeave = board[robot_list[current_robot].row][robot_list[current_robot].col];
+    squareToLeave.robot = null;
+    react.changed(squareToLeave, 'robot_color');
     //update the robot's location
     robot_list[current_robot].row = location.row;
     robot_list[current_robot].col = location.col;
     //update its new indicator
-    board[robot_list[current_robot].row][robot_list[current_robot].col].robot = current_robot;
+    var squareToEnter = board[robot_list[current_robot].row][robot_list[current_robot].col];
+    squareToEnter.robot = current_robot;
+    react.changed(squareToEnter, 'robot_color');
     if (robot_list[1].row === active_target.row && robot_list[1].col === active_target.col) {
       board.victorious = true;
+      react.changed(board, 'victorious');
     }
 
   }
