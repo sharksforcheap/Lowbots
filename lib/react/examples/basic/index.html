@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <script src="../../lib/jquery/jquery-1.4.2.js" ></script>
+    <script src="../../lib/js_dot_standin/js.js" ></script>
+    <script src="../../react.js" ></script>
+  </head>
+
+  <body>
+    <div id="expalanation">The following layout can be rerendered easily using the example functions provided.  Try running example1(), example2() and example3() in your console.  Check out the inline script tag for more details!</div>
+
+    <hr/>
+
+    <div id="app">
+      welcome <span react="attrIf foo 'bar' 'baz', contain user.name"></span>
+
+      <p>
+         you are
+         <span react="showIf isAdmin">an admin</span>
+         <span react="showIf !isAdmin">a member</span>
+      </p>
+
+      <p>today is <span react="contain day"></span></p>
+
+      <p><input type="checkbox" react="checkedIf on"/></p>
+    </div>
+
+
+
+    <script>
+      // example app code
+
+      var app = {
+        isAdmin:true,
+        day: 'friday',
+        user: {
+          name: 'jon'
+        },
+        on: true,
+        foo: true
+      };
+
+      react.anchor($('#app')[0], app);
+      react.update($('#app')[0]);
+
+
+
+      // try run these sample functions in your JS console to see what react can do!
+
+      var example1 = function(){
+        console.log('You can set properties on your state objects just like you normally would');
+        app.on = false;
+        console.log('Then notify react of the change, and your view will update automatically');
+        react.changed(app, 'on');
+      };
+
+      var example2 = function(){
+        console.log('Supplying the second argument to react.changed() isn\'t required, it\'s just a little more efficient. Without it, react iterates over all that object\'s keys looking for changes');
+        app.user = {name:'sally'};
+        app.foo = false;
+        react.changed(app);
+      };
+
+      var example3 = function(){
+        console.log('You can also tell react to set the property for you, and changed() will be called automatically after the assignment');
+        react.set(app, 'day', 'saturday');
+      };
+
+    </script>
+
+  </body>
+</html>
