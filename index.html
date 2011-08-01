@@ -1,7 +1,7 @@
 <html>
   <head>
+    <title>Lowbots!</title>
     <link href="./lowbots.css" type="text/css" rel="stylesheet"/>
-
     <script type="text/javascript" src="./lib/react/lib/jquery/jquery-1.4.2.js"></script>
     <script type="text/javascript" src="./lib/react/lib/js_dot_standin/js.js"></script>
     <script type="text/javascript" src="./lib/react/react.js"></script>
@@ -9,33 +9,80 @@
     <script src="./ricochet.js"></script>
   </head>
   <body>
-    <div>Lowbots!!</div>
-    <div react="showIf victorious">You win!!</div>
-    <div react="contain move_count"></div>
-    <div class="board">
-      <div react="loop">
-        <div class="row" react="loop">
-          <div class="square" react="classIf n_border 'n_border',
-                                     classIf s_border 's_border',
-                                     classIf e_border 'e_border',
-                                     classIf w_border 'w_border',
-                                     classIf no_target 'no_target',
-                                     classIf is_target 'is_target',
-                                     classIf active_target 'active_target',
-                                     classIf robot_color robot_color">
-          </div>
-          <div></div><div class="clearfix"></div>
+    <div id="content">
+      <p id="header">Lowbots!</p>
+      <div id="rules">
+        <p class="rulesParagraphs">Below is the game of Lobots!  The point of the game is to get the corect color robot to its colored square in as few moves as possible.  Other robots can also be used, but they contribute to the total move count.  Robots can be moved up, down, left, or right, but they do not stop until they hit a wall or another robot.</p>
+        <div>Keyboard Controls:</div>
+        <div class="KeyListLine">
+          <span class="key">Up Arrow</span><span class="middleDash">-</span><span class="keyAction">Move active robot up</span>
         </div>
-        <div></div>
+        <div class="KeyListLine">
+          <span class="key">Left Arrow</span><span class="middleDash">-</span><span class="keyAction">Move active robot Left</span>
+				</div>
+        <div class="KeyListLine">
+          <span class="key">Right Arrow</span><span class="middleDash">-</span><span class="keyAction">Move active robot Right</span>
+				</div>
+        <div class="KeyListLine">
+          <span class="key">Down Arrow</span><span class="middleDash">-</span><span class="keyAction">Move active robot Down</span>
+				</div>
+        <div class="KeyListLine">
+          <span class="key">P</span><span class="middleDash">-</span><span class="keyAction">Make purple robot active</span>
+				</div>
+        <div class="KeyListLine">
+          <span class="key">G</span><span class="middleDash">-</span><span class="keyAction">Make green robot active</span>
+				</div>
+        <div class="KeyListLine">
+          <span class="key">B</span><span class="middleDash">-</span><span class="keyAction">Make blue robot active</span>
+				</div>
+        <div class="KeyListLine">
+          <span class="key">Y</span><span class="middleDash">-</span><span class="keyAction">Make yellow robot active</span>
+				</div>
+        <div class="KeyListLine">
+          <span class="key">Esc</span><span class="middleDash">-</span><span class="keyAction">Reset current board</span>
+        </div>
       </div>
+			<div id="moveCount">
+			  <span >Move count:</span> <span react="contain move_count"></span>
+			</div>
+			<div id="win" react="showIf victorious">You win!!</div>
+			<div class="board">
+				<div react="loop">
+				<div class="row" react="loop">
+					<div class="square" react="classIf n_border 'n_border',
+											 classIf s_border 's_border',
+											 classIf e_border 'e_border',
+											 classIf w_border 'w_border',
+											 classIf no_target 'no_target',
+											 classIf is_target 'is_target',
+											 classIf active_target 'active_target',
+											 classIf redTarget 'redTarget',
+											 classIf greenTarget 'greenTarget',
+											 classIf blueTarget 'blueTarget',
+											 classIf yellowTarget 'yellowTarget',
+											 classIf robot_color robot_color,
+											 classIf blackout 'blackout'">
+					</div>
+					<div></div><div class="clearfix"></div>
+				</div>
+				<div></div>
+				</div>
+			</div>
+			<br />
+			<div id="timer">
+        <form>
+          <span><input type="button" value="Start count!" onclick="doTimer()"></span>
+          <span><input type="text" id="txt" /></span>
+        </form>			
+      </div>
+			<div react="contain bestRoute"></div>
     </div>
-
     <script>
-      var drawBoard = function(board){
-        react.update($('body')[0]);
+      var drawBoard = function(){
+        react.update(document.body);
       };
 
-      $(document).keyup(function(event){
+      $(document).keydown(function(event){
         var directionTranslationMatrix = {
           37: 'west',
           38: 'north',
@@ -47,7 +94,7 @@
           move[direction]();
         }
         var robotTranslationMatrix = {
-          82: 'red',
+          80: 'red',
           71: 'green',
           66: 'blue',
           89: 'yellow'
@@ -60,10 +107,13 @@
           reset();
           drawBoard(board);
         }
+        event.stopPropagation()
+        event.preventDefault();
+        return false;
       });
+
       react.anchor($('body')[0], board);
       drawBoard(board);
     </script>
-
   </body>
 </html>

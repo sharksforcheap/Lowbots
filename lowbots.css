@@ -7,6 +7,59 @@
       .clearfix {
         clear: both;
       }
+      #header {
+        width: 125px;
+        height:5px;
+        margin-left: auto;
+        margin-right: auto;
+        font-size: 200%;
+      }
+      #content {
+        width: 700px;
+        margin-left: auto;
+        margin-right: auto;
+      }
+      .rulesParagraphs {
+        text-indent: 20px;
+      }
+      .keyListLine {
+        margin-left: auto;
+        margin-right: auto;
+        width: 384px;
+        height: 19px;
+      }
+      .key {
+        width: 100px;
+        float: left;
+        text-align: center;
+      }
+      .middleDash{
+        width: 84px;
+        float: left;
+        text-align: center;	
+      }
+      .keyAction {
+        width: 200px;
+        float: left;
+        text-align: center;
+      }
+      #moveCount {
+        width: 153px;
+        font-size: 150%;
+        margin-left: auto;
+        margin-right: auto;
+      }
+      #win {
+        width: 135px;
+        font-size: 200%;
+        margin-left: auto;
+        margin-right: auto;
+      }
+      .board {
+        width: 384px;
+        margin-left: auto;
+        margin-right: auto;
+      }
       .n_border {
         border-top: 1px solid black;
       }
@@ -28,6 +81,21 @@
       .active_target {
         background-color: #00FF00;
       }
+      .redTarget {
+        background-color: #91219E;
+      }
+      .greenTarget {
+        background-color: #00FF00;
+      }
+      .blueTarget {
+        background-color: #003EFF;
+      }
+      .yellowTarget {
+        background-color: #EEEE00;
+      }
+      .blackout {
+        background-color: black;
+      }
       .red, .green, .blue, .yellow {
         background-position: 178px -215px;
       }
@@ -42,4 +110,9 @@
       }
       .yellow {
         background-image: url("./images/happy_robot.jpg");
+      }
+      #timer {
+        width: 250px;
+        margin-left: auto;
+        margin-right: auto;
       }
